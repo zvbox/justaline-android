@@ -1,0 +1,184 @@
+Index: app/src/main/java/com/arexperiments/justaline/AppSettings.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/arexperiments/justaline/AppSettings.java	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/java/com/arexperiments/justaline/AppSettings.java	(revision 1b8288602b61c9d5dcf587cff2942374ff96e188)
+@@ -34,7 +34,23 @@
+ 
+ public class AppSettings {
+ 
+-    private static final Vector3f color = new Vector3f(1f, 1f, 1f);
++    private static final Vector3f color = new Vector3f(0.1f, 1f, 1f);
++    public enum LineColor {
++        //RED(new Vector3f(1f, 0.1f, 0.1f)),
++        BLUE(new Vector3f(0.1f, 1f, 1f)),
++        GREEN(new Vector3f(0.1f, 1f, 0.1f)),
++        WHITE(new Vector3f(1f, 1f, 1f));
++
++        private final Vector3f color;
++
++        LineColor(Vector3f color) {
++            this.color= color;
++        }
++
++        public Vector3f getColor() {
++            return color;
++        }
++    }
+ 
+     private static final float strokeDrawDistance = 0.13f;
+ 
+@@ -49,9 +65,9 @@
+     private static final int smoothingCount = 1500;
+ 
+     public enum LineWidth {
+-        SMALL(0.006f),
++        SMALL(0.011f), //SMALL(0.006f),
+         MEDIUM(0.011f),
+-        LARGE(0.020f);
++        LARGE(0.011f);//LARGE(0.020f);
+ 
+         private final float width;
+ 
+Index: app/src/main/java/com/arexperiments/justaline/DrawARActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/arexperiments/justaline/DrawARActivity.java	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/java/com/arexperiments/justaline/DrawARActivity.java	(revision 2684012aada95ae41178653919589f45f4ec663d)
+@@ -147,6 +147,7 @@
+     private AtomicReferenceArray<Vector2f> touchQueue;
+ 
+     private float mLineWidthMax = 0.33f;
++    private Vector3f mLineColor = AppSettings.LineColor.WHITE.getColor();
+ 
+     private float[] mLastFramePosition;
+ 
+@@ -475,7 +476,10 @@
+      * addStroke adds a new stroke to the scene
+      */
+     private void addStroke() {
+-        mLineWidthMax = mBrushSelector.getSelectedLineWidth().getWidth();
++        //mLineWidthMax = mBrushSelector.getSelectedLineWidth().getWidth();
++        mLineWidthMax = AppSettings.LineWidth.MEDIUM.getWidth();
++        //zv
++        mLineColor = AppSettings.LineColor.values()[mBrushSelector.getSelectedLineWidth().ordinal()].getColor();
+ 
+         Stroke stroke = new Stroke();
+         stroke.localLine = true;
+@@ -663,7 +667,9 @@
+                 }
+             }
+             if (mLineShaderRenderer.bNeedsUpdate.get()) {
+-                mLineShaderRenderer.setColor(AppSettings.getColor());
++                //mLineShaderRenderer.setColor(AppSettings.getColor());
++                //zv
++                mLineShaderRenderer.setColor(mLineColor);
+                 mLineShaderRenderer.mDrawDistance = AppSettings.getStrokeDrawDistance();
+                 float distanceScale = 0.0f;
+                 mLineShaderRenderer.setDistanceScale(distanceScale);
+Index: app/src/main/res/drawable/ic_brush_color_option_blue.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_brush_color_option_blue.xml	(revision 1b8288602b61c9d5dcf587cff2942374ff96e188)
++++ app/src/main/res/drawable/ic_brush_color_option_blue.xml	(revision 1b8288602b61c9d5dcf587cff2942374ff96e188)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++       android:shape="oval">
++    <solid android:color="@color/blue"/>
++</shape>
+\ No newline at end of file
+Index: app/src/main/res/drawable/ic_brush_color_option_green.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_brush_color_option_green.xml	(revision 1b8288602b61c9d5dcf587cff2942374ff96e188)
++++ app/src/main/res/drawable/ic_brush_color_option_green.xml	(revision 1b8288602b61c9d5dcf587cff2942374ff96e188)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++       android:shape="oval">
++    <solid android:color="@color/green"/>
++</shape>
+\ No newline at end of file
+Index: app/src/main/res/drawable/ic_brush_size_option.xml
+===================================================================
+--- app/src/main/res/drawable/ic_brush_size_option.xml	(date 1551459766000)
++++ app/src/main/res/drawable/ic_brush_color_option_white.xml	(date 1551463693000)
+@@ -1,0 +1,0 @@
+Index: app/src/main/res/layout/view_brush_selector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/view_brush_selector.xml	(date 1551459766000)
++++ app/src/main/res/layout/view_brush_selector.xml	(date 1551463693000)
+@@ -30,9 +30,9 @@
+             android:paddingEnd="@dimen/brush_size_indicator_padding_right"
+             android:paddingStart="@dimen/brush_size_indicator_padding_left"
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+-            android:scaleX="@dimen/brush_scale_large"
+-            android:scaleY="@dimen/brush_scale_large"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:scaleX="@dimen/brush_scale_medium"
++            android:scaleY="@dimen/brush_scale_medium"
++            android:src="@drawable/ic_brush_color_option_white" />
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -62,7 +62,7 @@
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+             android:scaleX="@dimen/brush_scale_medium"
+             android:scaleY="@dimen/brush_scale_medium"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:src="@drawable/ic_brush_color_option_green" />
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -91,9 +91,9 @@
+             android:paddingEnd="@dimen/brush_size_indicator_padding_right"
+             android:paddingStart="@dimen/brush_size_indicator_padding_left"
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+-            android:scaleX="@dimen/brush_scale_small"
+-            android:scaleY="@dimen/brush_scale_small"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:scaleX="@dimen/brush_scale_medium"
++            android:scaleY="@dimen/brush_scale_medium"
++            android:src="@drawable/ic_brush_color_option_blue" />
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -125,7 +125,7 @@
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+             android:scaleX="@dimen/brush_scale_small"
+             android:scaleY="@dimen/brush_scale_small"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:src="@drawable/ic_brush_color_option_white" />
+     </FrameLayout>
+ 
+ </merge>
+\ No newline at end of file
+Index: app/src/main/res/values/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/colors.xml	(date 1551459766000)
++++ app/src/main/res/values/colors.xml	(date 1551463693000)
+@@ -27,4 +27,8 @@
+     <color name="white_50">#80FFFFFF</color>
+     <color name="white">#FFFFFF</color>
+ 
++
++    <color name="green">#11FF11</color>
++    <color name="blue">#11FFFF</color>
++
+ </resources>
+\ No newline at end of file
