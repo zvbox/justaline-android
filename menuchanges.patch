@@ -1,0 +1,224 @@
+Index: app/src/main/java/com/arexperiments/justaline/AppSettings.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/arexperiments/justaline/AppSettings.java	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/java/com/arexperiments/justaline/AppSettings.java	(date 1551459080166)
+@@ -34,7 +34,7 @@
+ 
+ public class AppSettings {
+ 
+-    private static final Vector3f color = new Vector3f(1f, 1f, 1f);
++    private static final Vector3f color = new Vector3f(0.3f, 1f, 1f);
+ 
+     private static final float strokeDrawDistance = 0.13f;
+ 
+@@ -48,10 +48,31 @@
+ 
+     private static final int smoothingCount = 1500;
+ 
++    public enum MyColor {
++
++        GREEN(new Vector3f(0.3f, 1f, 1f), 0.006f),
++        BLUE(new Vector3f(0.3f, 0.3f, 0.1f), 0.006f),
++        WHITE(new Vector3f(0.3f, 0.5f, 0.6f), 0.006f)
++        ;
++
++        private final Vector3f color;
++        private final float width;
++
++        MyColor(Vector3f i, float w) {
++            this.color = i;
++            this.width = w;
++        }
++
++        public float getWidth() {
++            return width;
++        }
++        public Vector3f getColor() { return color; }
++    }
++
+     public enum LineWidth {
+         SMALL(0.006f),
+-        MEDIUM(0.011f),
+-        LARGE(0.020f);
++        MEDIUM(0.006f),
++        LARGE(0.0006f);
+ 
+         private final float width;
+ 
+Index: app/src/main/res/drawable/ic_brush_size_option.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_brush_size_option.xml	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/res/drawable/ic_brush_size_option.xml	(date 1551458566876)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
+-    <solid android:color="@android:color/white"/>
++    <solid android:color="@color/green"/>
+ </shape>
+\ No newline at end of file
+Index: app/src/main/res/values/colors.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/colors.xml	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/res/values/colors.xml	(date 1551459191499)
+@@ -7,7 +7,7 @@
+     <color name="menu_bg_semi_transparent">@color/black_75</color>
+     <color name="menu_line_semi_transparent_grey">#33E0E0E0</color>
+     <color name="view_background_transparent">@color/black_30</color>
+-    <color name="draw_prompt_circle">#ccffffff</color>
++    <color name="draw_prompt_circle">#caffffff</color>
+ 
+     <color name="bg_pair_view">@color/black_30</color>
+     <color name="bg_pair_tool_tip">@color/black_50</color>
+@@ -18,13 +18,17 @@
+     <color name="pair_state_partner_lost">@color/black_50</color>
+ 
+     <color name="button_bg_transparent">@color/black_70</color>
+-
++    2555ff
+     <color name="black_30">#4D000000</color>
+     <color name="black_50">#80000000</color>
+-    <color name="black_70">#B3000000</color>
++    <color name="black_70">#B3000000</color>2555ff
+     <color name="black_75">#BF000000</color>
+ 
+     <color name="white_50">#80FFFFFF</color>
+-    <color name="white">#FFFFFF</color>
++    <color name="white">#caffffff</color>
++
++    <!-- KIEN -->
++    <color name="green">#7CFC00</color>
++    <color name="blue">#2555ff</color>
+ 
+ </resources>
+\ No newline at end of file
+Index: app/src/main/res/layout/view_brush_selector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/view_brush_selector.xml	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/res/layout/view_brush_selector.xml	(date 1551459055050)
+@@ -9,8 +9,8 @@
+         android:id="@+id/brush_selection_large"
+         android:contentDescription="@string/content_description_large_brush"
+         android:clickable="true"
+-        android:layout_width="@dimen/brush_input_frame"
+-        android:layout_height="@dimen/brush_input_frame"
++        android:layout_width="32dp"
++        android:layout_height="32dp"
+         android:layout_marginBottom="8dp"
+         app:layout_constraintBottom_toTopOf="@id/brush_selection_medium"
+         app:layout_constraintLeft_toLeftOf="parent"
+@@ -30,9 +30,9 @@
+             android:paddingEnd="@dimen/brush_size_indicator_padding_right"
+             android:paddingStart="@dimen/brush_size_indicator_padding_left"
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+-            android:scaleX="@dimen/brush_scale_large"
+-            android:scaleY="@dimen/brush_scale_large"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:scaleX=".4"
++            android:scaleY=".4"
++            android:src="@drawable/ic_brush_color_green_option" />
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -60,9 +60,9 @@
+             android:paddingEnd="@dimen/brush_size_indicator_padding_right"
+             android:paddingStart="@dimen/brush_size_indicator_padding_left"
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+-            android:scaleX="@dimen/brush_scale_medium"
+-            android:scaleY="@dimen/brush_scale_medium"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:scaleX=".4"
++            android:scaleY=".4"
++            android:src="@drawable/ic_brush_color_blue_option" />
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -93,7 +93,7 @@
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+             android:scaleX="@dimen/brush_scale_small"
+             android:scaleY="@dimen/brush_scale_small"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:src="@drawable/ic_brush_color_white_option"/>
+     </FrameLayout>
+ 
+     <FrameLayout
+@@ -125,7 +125,7 @@
+             android:paddingTop="@dimen/brush_size_indicator_padding_top"
+             android:scaleX="@dimen/brush_scale_small"
+             android:scaleY="@dimen/brush_scale_small"
+-            android:src="@drawable/ic_brush_size_option" />
++            android:src="@drawable/ic_brush_color_blue_option" />
+     </FrameLayout>
+ 
+ </merge>
+\ No newline at end of file
+Index: app/src/main/java/com/arexperiments/justaline/view/BrushSelector.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/arexperiments/justaline/view/BrushSelector.java	(revision 2d9ba5d3c83539568d023b99744d04892a295dc4)
++++ app/src/main/java/com/arexperiments/justaline/view/BrushSelector.java	(date 1551457736526)
+@@ -33,6 +33,10 @@
+  */
+ 
+ public class BrushSelector extends ConstraintLayout implements View.OnClickListener {
++    //KIEN
++    private static final int[] COLORS = new int[]{0, 1, 2};
++    private static final Pair<Integer, AppSettings.MyColor> defaultColor = new Pair<>(COLORS[0], AppSettings.MyColor.BLUE);
++    //END
+ 
+     private static final String TAG = "BrushSelector";
+ 
+@@ -191,6 +195,11 @@
+         return super.performClick();
+     }
+ 
++    //KIEN
++    private void onColorSelected(AppSettings.MyColor color) {
++
++    }
++    //END
+     private void onBrushSizeSelected(AppSettings.LineWidth lineWidth) {
+         mSelectedLineWidth = lineWidth;
+ 
+Index: app/src/main/res/drawable/ic_brush_color_green_option.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_brush_color_green_option.xml	(date 1551458566876)
++++ app/src/main/res/drawable/ic_brush_color_green_option.xml	(date 1551458566876)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++       android:shape="oval">
++    <solid android:color="@color/green"/>
++</shape>
+\ No newline at end of file
+Index: app/src/main/res/drawable/ic_brush_color_white_option.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/drawable/ic_brush_color_white_option.xml	(date 1551458878877)
++++ app/src/main/res/drawable/ic_brush_color_white_option.xml	(date 1551458878877)
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android"
++       android:shape="oval">
++    <solid android:color="@color/white"/>
++</shape>
+\ No newline at end of file
